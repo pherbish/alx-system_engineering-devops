@@ -1,2 +1,3 @@
 #!bin/bash
-ls -xamp
+ls -A1 | { echo -n "./, ../,"; grep '^[0-9A-Za-z]' | sort | tr '\n' ','; echo; }
+

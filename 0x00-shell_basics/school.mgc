@@ -1,2 +1,2 @@
-#!/bin/bash 
-0 string SCHOOL School data file
+#!/bin/bash
+file -m $MAGIC your_school_data_file
