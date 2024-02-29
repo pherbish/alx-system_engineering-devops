@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Function to display usage message and ping ip 
+# Check if an argument is provided
+if [ $# -ne 1 ]; 
+then
+    echo "Usage: 5-is_the_host_on_the_network $0 {IP_ADDRESS}"
+    exit 1
+fi
+ping -c 5 "$1"
