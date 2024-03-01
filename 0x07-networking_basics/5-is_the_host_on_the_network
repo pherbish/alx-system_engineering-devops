@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Function to display usage message and ping ip 
 # Check if an argument is provided
 if [ $# -ne 1 ]; 
