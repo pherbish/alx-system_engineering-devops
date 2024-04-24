@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
-#  A Script that configures a new Ubuntu machine to Perform a 301-redirection
 
-# Upadating Packages before Installations
+# Update package list and install nginx
 sudo apt-get update
 sudo apt-get install -y nginx
 
-# Creating an index.html page
+# Create a simple HTML file with "Hello World!"
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Performing a 301 Redirection
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/besthor permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+# Configure nginx for 301 redirection
+redirect_config="server {
+    listen 80;
+    server_name _;
+    location /redirect_me {
+    return 301 https://github.com/besthor;
+}
+}"
 
-# Restarting Nginx service
+echo "$redirect_config" | sudo tee /etc/nginx/sites-available/redirect_me > /dev/null
+sudo ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+# Restart nginx to apply the changes
 sudo service nginx restart
+echo "Nginx configured for redirection successfully."
