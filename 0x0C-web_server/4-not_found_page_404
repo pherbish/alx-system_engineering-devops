@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Update package list and install nginx
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Create a simple HTML file with "Hello World!"
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Create a custom 404 HTML page with the desired string
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+
+# Update Nginx configuration to include custom 404 page
+sudo sed -i '/server_name _;/a \ \ error_page 404 /404.html;\n \ \ location = /404.html {\n \ \ \ \ root /var/www/html;\n \ \ \ \ internal;\n \ \ }' /etc/nginx/sites-enabled/default
+
+# Test nginx configuration for syntax errors
+sudo nginx -t
+
+# Restart nginx to apply the changes
+sudo service nginx restart
+
+echo "Nginx configured for custom 404 page successfully."
+
