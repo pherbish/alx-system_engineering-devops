@@ -1,23 +1,36 @@
 #!/usr/bin/env bash
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
+#
 
-# Update package list and install nginx
-sudo apt-get update
-sudo apt-get install -y nginx
 
-# Create a simple HTML file with "Hello World!"
-echo "Hello World!" | sudo tee /var/www/html/index.html
+echo -e "Updating and installing Nginx.\n"
+sudo apt-get update -y -qq && \
+	         sudo apt-get install nginx -y
 
-# Create a custom 404 HTML page with the desired string
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+echo -e "\nSetting up some minor stuff.\n"
 
-# Update Nginx configuration to include custom 404 page
-sudo sed -i '/server_name _;/a \ \ error_page 404 /404.html;\n \ \ location = /404.html {\n \ \ \ \ root /var/www/html;\n \ \ \ \ internal;\n \ \ }' /etc/nginx/sites-enabled/default
+# starting nginx service
+sudo service nginx start
 
-# Test nginx configuration for syntax errors
-sudo nginx -t
+# allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
 
-# Restart nginx to apply the changes
+# Give the user ownership to website files for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+
+# Creating new index
+echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# Setting up /redirect_me to a youtube video
+sudo sed -i '24i\       rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+
+# Restarting nginx
 sudo service nginx restart
 
-echo "Nginx configured for custom 404 page successfully."
-
+echo -e "\nCompleted.\n"
