@@ -16,6 +16,7 @@ sudo service nginx start
 # allowing nginx on firewall
 sudo ufw allow 'Nginx HTTP'
 
+<<<<<<< HEAD
 # Give the user ownership to website files for easy editing
 sudo chown -R "$USER":"$USER" /var/www/html
 sudo chmod -R 755 /var/www
@@ -30,3 +31,10 @@ echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
 sudo service nginx restart
 
 echo -e "\nCompleted. ✅\n"
+=======
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
+sudo service nginx restart
+#checking configuration
+sudo nginx -t 
+sudo killall -s HUP nginx
+>>>>>>> a5420c665dd309c54ece99875b57c5caf0144964
