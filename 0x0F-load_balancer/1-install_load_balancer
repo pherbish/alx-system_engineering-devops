@@ -39,8 +39,8 @@ server_config=\
 
    backend pherdorssystems-tech-backend
      balance roundrobin
-     server 200486-web-01 3.83.18.218:80 check
-     server 200486-web-02 100.25.131.198:80 check
+     server 200486-web-01 54.87.204.19:80 check
+     server 200486-web-02 35.174.204.38:80 check
      "
 # shellcheck disable=SC2154
 echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg

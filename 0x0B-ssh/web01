@@ -5,4 +5,4 @@ eval $("ssh-agent")
 
 ssh-add /c/users/pherbish/.ssh/id_rsa
 
-ssh ubuntu@3.83.18.218
+ssh ubuntu@54.87.204.19
