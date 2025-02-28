@@ -1,4 +1,4 @@
-# This Puppet manifest fixes an Apache 500 error by ensuring necessary packages, permissions, and configurations are set correctly.
+# This Puppet manifest fixes an Apache 500 error by ensuring correct packages, permissions, and configurations.
 
 class apache_fix {
   
@@ -30,18 +30,29 @@ class apache_fix {
     ensure  => directory,
     owner   => 'www-data',
     group   => 'www-data',
-    mode    => '0755',
+    mode    => '0755', # Only applies to this directory
     recurse => true,
+  }
+
+  # Ensure all directories inside /var/www/html have the correct permissions
+  exec { 'fix_directories':
+    command => "find /var/www/html -type d -exec chmod 0755 {} \\;",
+    path    => ['/bin', '/usr/bin'],
+  }
+
+  # Ensure all files inside /var/www/html have correct permissions (0644)
+  exec { 'fix_files':
+    command => "find /var/www/html -type f -exec chmod 0644 {} \\;",
+    path    => ['/bin', '/usr/bin'],
   }
 
   # Restart Apache to apply changes
   exec { 'restart_apache':
     command     => '/usr/sbin/service apache2 restart',
     refreshonly => true,
-    subscribe   => [ Package['apache2'], Package['php5'], Package['libapache2-mod-php5'], File['/var/www/html'] ],
+    subscribe   => [ Package['apache2'], Package['php5'], Package['libapache2-mod-php5'], File['/var/www/html'], Exec['fix_directories'], Exec['fix_files'] ],
   }
 
 }
 
 include apache_fix
-
